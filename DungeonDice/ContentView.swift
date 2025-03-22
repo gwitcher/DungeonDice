@@ -38,9 +38,9 @@ struct ContentView: View {
     let spacing: CGFloat = 0 // betwen buttons
     let buttonWidth: CGFloat = 102
     
-//    @State private var  columns = [
-//        GridItem(.adaptive(minimum: buttonWidth)),
-//    ]
+    //    @State private var  columns = [
+    //        GridItem(.adaptive(minimum: buttonWidth)),
+    //    ]
     @State private var animationTrigger = false
     @State private var isDoneAnimating = true
     
@@ -60,8 +60,8 @@ struct ContentView: View {
                     .fontWeight(.medium)
                     .frame(height: 150)
                     .multilineTextAlignment(.center)
-    //                .scaleEffect(isDoneAnimating ? 1.0 : 0.5)
-    //                .opacity(isDoneAnimating ? 1.0 : 0.2)
+                //                .scaleEffect(isDoneAnimating ? 1.0 : 0.5)
+                //                .opacity(isDoneAnimating ? 1.0 : 0.2)
                     .rotation3DEffect(isDoneAnimating ? .degrees(360) : .degrees(0), axis: (x: 1, y: 0, z: 0))
                     .onChange(of: animationTrigger) {
                         isDoneAnimating = false
@@ -98,18 +98,26 @@ struct ContentView: View {
                 
             }
             .padding()
+            .onChange(of: geo.size.width, { oldValue, newValue in
+                arrangeGridItems(geo: geo)
+            })
             .onAppear {
-                var screenWidth = geo.size.width - horizontalPadding*2 //padding on both sides of buttons
-                if Dice.allCases.count > 1 {
-                    screenWidth += spacing
-                }
-                //calculate number of buttons per row as Int
-                let numberOfButtonsPerRow = Int(screenWidth) / Int(buttonWidth + spacing)
-                buttonsLeftOver = Dice.allCases.count % numberOfButtonsPerRow
-                print("Buttons left over = \(buttonsLeftOver)")
+                arrangeGridItems(geo: geo)
+                
             }
         }
         
+    }
+    
+    func arrangeGridItems(geo: GeometryProxy) {
+        var screenWidth = geo.size.width - horizontalPadding*2 //padding on both sides of buttons
+        if Dice.allCases.count > 1 {
+            screenWidth += spacing
+        }
+        //calculate number of buttons per row as Int
+        let numberOfButtonsPerRow = Int(screenWidth) / Int(buttonWidth + spacing)
+        buttonsLeftOver = Dice.allCases.count % numberOfButtonsPerRow
+        print("Buttons left over = \(buttonsLeftOver)")
     }
 }
 
